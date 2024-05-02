@@ -1,1 +1,1 @@
-Entrega #1 para la materia Análisis Predictivo Avanzado
+Material utilizado para el trabajo práctico en la materia Análisis Predictivo Avanzado
