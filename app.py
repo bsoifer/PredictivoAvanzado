@@ -8,7 +8,7 @@ df_ratings = pd.read_csv('./datos/rating_final.csv')
 df_places = pd.read_csv('./datos/geoplaces2.csv')
 
 # Configurar Surprise
-reader = Reader(rating_scale=(1, 5))
+reader = Reader(rating_scale=(0, 2))
 data = Dataset.load_from_df(df_ratings[['userID', 'placeID', 'rating']], reader)
 
 # Dividir datos para entrenamiento y prueba
