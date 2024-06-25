@@ -4,8 +4,8 @@ from surprise import Dataset, Reader, KNNBasic
 from surprise.model_selection import train_test_split
 
 # Cargar datos
-df_ratings = pd.read_csv('./datos/rating_final.csv')
-df_places = pd.read_csv('./datos/geoplaces2.csv')
+df_ratings = pd.read_csv('TP2/datos/rating_final.csv')
+df_places = pd.read_csv('TP2/datos/geoplaces2.csv')
 
 # Configurar Surprise
 reader = Reader(rating_scale=(0, 2))
