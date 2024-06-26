@@ -6,9 +6,9 @@ import uuid
 
 app = Flask(__name__)
 
-df_ratings = pd.read_csv('./datos/rating_final.csv', sep=',')
-df_places = pd.read_csv('./datos/dataLocal.csv', sep=';')
-df_users = pd.read_csv('./datos/dataUser.csv', sep=';')
+df_ratings = pd.read_csv('TP2/datos/rating_final.csv', sep=',')
+df_places = pd.read_csv('TP2/datos/dataLocal.csv', sep=';')
+df_users = pd.read_csv('TP2/datos/dataUser.csv', sep=';')
 
 reader = Reader(rating_scale=(0, 2))
 data = Dataset.load_from_df(df_ratings[['userID', 'placeID', 'rating']], reader)
@@ -52,7 +52,7 @@ def recommend():
     global df_users  
     new_user = pd.DataFrame([{'userID': user_id, 'latitude': None, 'longitude': None, **user_data}])
     df_users = pd.concat([df_users, new_user], ignore_index=True)
-    df_users.to_csv('./datos/dataUser.csv', index=False)
+    df_users.to_csv('TP2/datos/dataUser.csv', index=False)
 
     recommendations = recommend_places(user_id, algo, df_places)
 
