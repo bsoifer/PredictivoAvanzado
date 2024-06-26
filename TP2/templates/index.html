@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendation System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- Otros metadatos y estilos -->
+</head>
+<body>
+    <!-- Contenido de tu página -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <div class="container">
+        <h1>Ingrese sus Datos para Recomendaciones</h1>
+        <form id="userForm">
+            <label for="smoker">¿Es fumador?</label>
+            <select id="smoker" name="smoker">
+                {% for option in unique_smoker %}
+                    <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="drink_level">Nivel de consumo de bebidas:</label>
+            <select id="drink_level" name="drink_level">
+                {% for option in unique_drink_level %}
+                    <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="dress_preference">Preferencia de vestimenta:</label>
+            <select id="dress_preference" name="dress_preference">
+                {% for option in unique_dress_preference %}
+                    <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="ambience">Ambiente preferido:</label>
+            <select id="ambience" name="ambience">
+                {% for option in unique_ambience %}
+                    <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="transport">Medio de transporte:</label>
+            <select id="transport" name="transport">
+                {% for option in unique_transport %}
+                    <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="marital_status">Estado civil:</label>
+            <select id="marital_status" name="marital_status">
+                {% for option in unique_marital_status %}
+                    <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="hijos">Número de hijos:</label>
+            <select id="hijos" name="hijos">
+                {% for option in unique_hijos %}
+                    <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="birth_year">Año de nacimiento:</label>
+            <input type="number" id="birth_year" name="birth_year" min="1900" max="2023"><br>
+
+            <label for="interest">Interés:</label>
+            <select id="interest" name="interest">
+                {% for option in unique_interest %}
+                    <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="personality">Personalidad:</label>
+            <select id="personality" name="personality">
+                {% for option in unique_personality %}
+                    <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="religion">Religión:</label>
+            <select id="religion" name="religion">
+                {% for option in unique_religion %}
+                    <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="activity">Actividad:</label>
+            <select id="activity" name="activity">
+                {% for option in unique_activity %}
+                    <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="budget">Presupuesto:</label>
+            <select id="budget" name="budget">
+                {% for option in unique_budget %}
+                    <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select><br>
+
+            <button type="button" onclick="getRecommendations()">Obtener Recomendaciones</button>
+        </form>
+
+        <div id="recommendations">
+            <!-- Aquí se mostrarán las recomendaciones -->
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
