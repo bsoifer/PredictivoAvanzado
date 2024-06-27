@@ -114,4 +114,6 @@ def index():
                            unique_Upayment=unique_Upayment)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Obtener el puerto del entorno o usar el puerto 8080 por defecto
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port, debug=True)
