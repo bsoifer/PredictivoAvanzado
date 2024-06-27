@@ -7,28 +7,42 @@ import uuid
 
 app = Flask(__name__)
 
-# Obtener la ruta del directorio actual del script
-current_dir = os.path.dirname(__file__)
+# Variables globales para los datos y el modelo
+df_ratings = None
+df_places = None
+df_users = None
+algo = None
 
-# Rutas a los archivos CSV
-ratings_file = os.path.join(current_dir, 'datos', 'rating_final.csv')
-places_file = os.path.join(current_dir, 'datos', 'dataLocal.csv')
-users_file = os.path.join(current_dir, 'datos', 'dataUser.csv')
+# Cargar los datos inicialmente
+def load_data():
+    global df_ratings, df_places, df_users
+    # Obtener la ruta del directorio actual del script
+    current_dir = os.path.dirname(__file__)
 
-# Cargar los DataFrames desde los archivos CSV
-df_ratings = pd.read_csv(ratings_file, sep=',')
-df_places = pd.read_csv(places_file, sep=';')
-df_users = pd.read_csv(users_file, sep=';')
+    # Rutas a los archivos CSV
+    ratings_file = os.path.join(current_dir, 'datos', 'rating_final.csv')
+    places_file = os.path.join(current_dir, 'datos', 'dataLocal.csv')
+    users_file = os.path.join(current_dir, 'datos', 'dataUser.csv')
 
-# Configurar Surprise
-reader = Reader(rating_scale=(0, 2))
-data = Dataset.load_from_df(df_ratings[['userID', 'placeID', 'rating']], reader)
+    # Cargar los DataFrames desde los archivos CSV
+    df_ratings = pd.read_csv(ratings_file, sep=',')
+    df_places = pd.read_csv(places_file, sep=';')
+    df_users = pd.read_csv(users_file, sep=';')
 
-trainset, testset = train_test_split(data, test_size=0.2, random_state=42)
+    # Configurar Surprise
+    reader = Reader(rating_scale=(0, 2))
+    data = Dataset.load_from_df(df_ratings[['userID', 'placeID', 'rating']], reader)
 
-algo = KNNBasic(k=20, sim_options={'name': 'msd', 'user_based': False})
-algo.fit(trainset)
+    return data
 
+# Iniciar el modelo con los datos cargados
+def init_model(data):
+    global algo
+    trainset, _ = train_test_split(data, test_size=0.2, random_state=42)
+    algo = KNNBasic(k=20, sim_options={'name': 'msd', 'user_based': False})
+    algo.fit(trainset)
+
+# Función para recomendar lugares
 def recommend_places(user_id, algo, df_places, top_n=10):
     recommendations = []
 
@@ -53,17 +67,27 @@ def recommend_places(user_id, algo, df_places, top_n=10):
 
     return top_recommendations_details
 
+# Ruta para recibir datos de usuario y generar recomendaciones
 @app.route('/recommend', methods=['POST'])
 def recommend_endpoint():
     user_data = request.json
 
+    # Actualizar df_users con el nuevo usuario
+    global df_users
     user_id = f"U20{uuid.uuid4().hex[:2].upper()}"
-
-    global df_users  
     new_user = pd.DataFrame([{'userID': user_id, 'latitude': None, 'longitude': None, **user_data}])
     df_users = pd.concat([df_users, new_user], ignore_index=True)
-    df_users.to_csv(users_file, index=False)
+    df_users.to_csv(os.path.join(os.path.dirname(__file__), 'datos', 'dataUser.csv'), index=False)
 
+    # Recalcular y actualizar el modelo
+    global algo
+    global df_ratings
+    if df_ratings is not None:
+        data = Dataset.load_from_df(df_ratings[['userID', 'placeID', 'rating']], reader)
+        trainset, _ = train_test_split(data, test_size=0.2, random_state=42)
+        algo.fit(trainset)
+
+    # Generar nuevas recomendaciones
     recommendations = recommend_places(user_id, algo, df_places)
 
     top_recommendations_details = []
@@ -76,6 +100,7 @@ def recommend_endpoint():
 
     return jsonify(top_recommendations_details)
 
+# Ruta para la página inicial
 @app.route('/')
 def index():
     unique_budget = ['medium', 'low', '?', 'high']
@@ -114,6 +139,10 @@ def index():
                            unique_Upayment=unique_Upayment)
 
 if __name__ == '__main__':
+    # Cargar los datos y el modelo al inicio
+    data = load_data()
+    init_model(data)
+
     # Obtener el puerto del entorno o usar el puerto 8080 por defecto
     port = int(os.environ.get('PORT', 8080))
     app.run(host='0.0.0.0', port=port, debug=True)
