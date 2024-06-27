@@ -1,0 +1,8 @@
+services:
+  - name: web
+    env: python
+    build_command: pip install -r requirements.txt
+    start_command: python flaskApp.py
+    env_vars:
+      - key: PORT
+        value: 8080
