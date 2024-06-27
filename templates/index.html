@@ -1,113 +1,145 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recommendation System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <!-- Otros metadatos y estilos -->
+    <title>Place Recommendation System</title>
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000&display=swap');
+    </style>
 </head>
 <body>
-    <!-- Contenido de tu página -->
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-    <div class="container">
-        <h1>Ingrese sus Datos para Recomendaciones</h1>
-        <form id="userForm">
-            <label for="smoker">¿Es fumador?</label>
-            <select id="smoker" name="smoker">
-                {% for option in unique_smoker %}
-                    <option value="{{ option }}">{{ option }}</option>
-                {% endfor %}
-            </select><br>
-
-            <label for="drink_level">Nivel de consumo de bebidas:</label>
-            <select id="drink_level" name="drink_level">
-                {% for option in unique_drink_level %}
-                    <option value="{{ option }}">{{ option }}</option>
-                {% endfor %}
-            </select><br>
-
-            <label for="dress_preference">Preferencia de vestimenta:</label>
-            <select id="dress_preference" name="dress_preference">
-                {% for option in unique_dress_preference %}
-                    <option value="{{ option }}">{{ option }}</option>
-                {% endfor %}
-            </select><br>
-
-            <label for="ambience">Ambiente preferido:</label>
-            <select id="ambience" name="ambience">
-                {% for option in unique_ambience %}
-                    <option value="{{ option }}">{{ option }}</option>
-                {% endfor %}
-            </select><br>
-
-            <label for="transport">Medio de transporte:</label>
-            <select id="transport" name="transport">
-                {% for option in unique_transport %}
-                    <option value="{{ option }}">{{ option }}</option>
-                {% endfor %}
-            </select><br>
-
-            <label for="marital_status">Estado civil:</label>
-            <select id="marital_status" name="marital_status">
-                {% for option in unique_marital_status %}
-                    <option value="{{ option }}">{{ option }}</option>
-                {% endfor %}
-            </select><br>
-
-            <label for="hijos">Número de hijos:</label>
-            <select id="hijos" name="hijos">
-                {% for option in unique_hijos %}
-                    <option value="{{ option }}">{{ option }}</option>
-                {% endfor %}
-            </select><br>
-
-            <label for="birth_year">Año de nacimiento:</label>
-            <input type="number" id="birth_year" name="birth_year" min="1900" max="2023"><br>
-
-            <label for="interest">Interés:</label>
-            <select id="interest" name="interest">
-                {% for option in unique_interest %}
-                    <option value="{{ option }}">{{ option }}</option>
-                {% endfor %}
-            </select><br>
-
-            <label for="personality">Personalidad:</label>
-            <select id="personality" name="personality">
-                {% for option in unique_personality %}
-                    <option value="{{ option }}">{{ option }}</option>
-                {% endfor %}
-            </select><br>
-
-            <label for="religion">Religión:</label>
-            <select id="religion" name="religion">
-                {% for option in unique_religion %}
-                    <option value="{{ option }}">{{ option }}</option>
-                {% endfor %}
-            </select><br>
-
-            <label for="activity">Actividad:</label>
-            <select id="activity" name="activity">
-                {% for option in unique_activity %}
-                    <option value="{{ option }}">{{ option }}</option>
-                {% endfor %}
-            </select><br>
-
-            <label for="budget">Presupuesto:</label>
-            <select id="budget" name="budget">
-                {% for option in unique_budget %}
-                    <option value="{{ option }}">{{ option }}</option>
-                {% endfor %}
-            </select><br>
-
-            <button type="button" onclick="getRecommendations()">Obtener Recomendaciones</button>
-        </form>
-
-        <div id="recommendations">
-            <!-- Aquí se mostrarán las recomendaciones -->
-        </div>
-    </div>
-
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <h1>Place Recommendation System</h1>
+    <form action="/recommend" method="post">
+        <label for="smoker">Smoker:</label>
+        <select name="smoker" id="smoker">
+            <option value="false">false</option>
+            <option value="true">true</option>
+            <option value="?">?</option>
+        </select><br>
+        <label for="drink_level">Drink Level:</label>
+        <select name="drink_level" id="drink_level">
+            <option value="abstemious">abstemious</option>
+            <option value="social drinker">social drinker</option>
+            <option value="casual drinker">casual drinker</option>
+        </select><br>
+        <label for="dress_preference">Dress Preference:</label>
+        <select name="dress_preference" id="dress_preference">
+            <option value="informal">informal</option>
+            <option value="formal">formal</option>
+            <option value="no preference">no preference</option>
+            <option value="?">?</option>
+            <option value="elegant">elegant</option>
+        </select><br>
+        <label for="ambience">Ambience:</label>
+        <select name="ambience" id="ambience">
+            <option value="family">family</option>
+            <option value="friends">friends</option>
+            <option value="solitary">solitary</option>
+            <option value="?">?</option>
+        </select><br>
+        <label for="transport">Transport:</label>
+        <select name="transport" id="transport">
+            <option value="on foot">on foot</option>
+            <option value="public">public</option>
+            <option value="car owner">car owner</option>
+            <option value="?">?</option>
+        </select><br>
+        <label for="marital_status">Marital Status:</label>
+        <select name="marital_status" id="marital_status">
+            <option value="single">single</option>
+            <option value="married">married</option>
+            <option value="widow">widow</option>
+            <option value="?">?</option>
+        </select><br>
+        <label for="hijos">Hijos:</label>
+        <select name="hijos" id="hijos">
+            <option value="independent">independent</option>
+            <option value="kids">kids</option>
+            <option value="?">?</option>
+            <option value="dependent">dependent</option>
+        </select><br>
+        <label for="birth_year">Birth Year:</label>
+        <input type="number" name="birth_year" min="1900" max="2024"><br>
+        <label for="interest">Interest:</label>
+        <select name="interest" id="interest">
+            <option value="variety">variety</option>
+            <option value="technology">technology</option>
+            <option value="none">none</option>
+            <option value="retro">retro</option>
+            <option value="eco-friendly">eco-friendly</option>
+        </select><br>
+        <label for="personality">Personality:</label>
+        <select name="personality" id="personality">
+            <option value="thrifty-protector">thrifty-protector</option>
+            <option value="hunter-ostentatious">hunter-ostentatious</option>
+            <option value="hard-worker">hard-worker</option>
+            <option value="conformist">conformist</option>
+        </select><br>
+        <label for="religion">Religion:</label>
+        <select name="religion" id="religion">
+            <option value="none">none</option>
+            <option value="Catholic">Catholic</option>
+            <option value="Christian">Christian</option>
+            <option value="Mormon">Mormon</option>
+            <option value="Jewish">Jewish</option>
+        </select><br>
+        <label for="activity">Activity:</label>
+        <select name="activity" id="activity">
+            <option value="student">student</option>
+            <option value="professional">professional</option>
+            <option value="?">?</option>
+            <option value="unemployed">unemployed</option>
+            <option value="working-class">working-class</option>
+        </select><br>
+        <label for="weight">Weight:</label>
+        <input type="number" name="weight" min="20"><br>
+        <label for="budget">Budget:</label>
+        <select name="budget" id="budget">
+            <option value="medium">medium</option>
+            <option value="low">low</option>
+            <option value="?">?</option>
+            <option value="high">high</option>
+        </select><br>
+        <label for="height">Height:</label>
+        <input type="number" name="height" min="20"><br>
+        <label for="Rcuisine">Cuisine:</label>
+        <select name="Rcuisine" id="Rcuisine">
+            <option value="American">American</option>
+            <option value="Mexican">Mexican</option>
+            <option value="Bakery">Bakery</option>
+            <option value="Family">Family</option>
+            <option value="Cafe-Coffee_Shop">Cafe-Coffee_Shop</option>
+            <option value="Diner">Diner</option>
+            <option value="Latin_American">Latin_American</option>
+            <option value="Japanese">Japanese</option>
+            <option value="Chinese">Chinese</option>
+            <option value="Pizzeria">Pizzeria</option>
+            <option value="Afghan">Afghan</option>
+            <option value="Regional">Regional</option>
+            <option value="Contemporary">Contemporary</option>
+            <option value="Middle_Eastern">Middle_Eastern</option>
+            <option value="Bar">Bar</option>
+            <option value="Breakfast-Brunch">Breakfast-Brunch</option>
+            <option value="Cuban">Cuban</option>
+            <option value="Burgers">Burgers</option>
+            <option value="Sushi">Sushi</option>
+            <option value="Italian">Italian</option>
+            <option value="Tex-Mex">Tex-Mex</option>
+            <option value="Game">Game</option>
+            <option value="Cafeteria">Cafeteria</option>
+            <option value="Barbecue">Barbecue</option>
+            <option value="Turkish">Turkish</option>
+            <option value="Organic-Healthy">Organic-Healthy</option>
+        </select><br>
+        <label for="Upayment">Payment:</label>
+        <select name="Upayment" id="Upayment">
+            <option value="cash">cash</option>
+            <option value="MasterCard-Eurocard">MasterCard-Eurocard</option>
+            <option value="bank_debit_cards">bank_debit_cards</option>
+            <option value="VISA">VISA</option>
+            <option value="American_Express">American_Express</option>
+        </select><br>
+        <button type="submit">Submit</button>
+    </form>
 </body>
 </html>

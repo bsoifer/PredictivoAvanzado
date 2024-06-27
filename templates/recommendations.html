@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recommendations</title>
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000&display=swap');
+    </style>
+</head>
+<body>
+    <h1>Top Recommendations</h1>
+    {% for rec in recommendations %}
+        <div>
+            <h2>{{ rec.name }}</h2>
+            <p>Address: {{ rec.address }}</p>
+            <p>Rating: {{ rec.rating }}</p>
+            <hr>
+        </div>
+    {% endfor %}
+</body>
+</html>
