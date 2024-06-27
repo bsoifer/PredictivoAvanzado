@@ -14,18 +14,9 @@ ratings_file = 'https://raw.githubusercontent.com/bsoifer/PredictivoAvanzado/mai
 places_file = 'https://raw.githubusercontent.com/bsoifer/PredictivoAvanzado/main/datos/dataLocal.csv'
 users_file = 'https://raw.githubusercontent.com/bsoifer/PredictivoAvanzado/main/datos/dataUser.csv'
 
-df_ratings = pd.read_csv(ratings_file, sep=';')
+df_ratings = pd.read_csv(ratings_file)
 df_places = pd.read_csv(places_file, sep=';')
-
-if os.path.exists(users_file):
-    df_users = pd.read_csv(users_file, sep=';')
-else:
-    df_users = pd.DataFrame(columns=[
-        'userID', 'latitude', 'longitude', 'smoker', 'drink_level', 'dress_preference', 
-        'ambience', 'transport', 'marital_status', 'hijos', 'birth_year', 'interest', 
-        'personality', 'religion', 'activity', 'weight', 'budget', 'height', 
-        'Rcuisine', 'Upayment', 'rating', 'food_rating', 'service_rating'
-    ])
+df_users = pd.read_csv(users_file, sep=';')
 
 df_users_filtered = df_users[df_users['userID'].str.startswith('U1')]
 
