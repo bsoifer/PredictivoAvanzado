@@ -10,9 +10,9 @@ import os
 app = Flask(__name__)
 
 # Read data
-ratings_file = './datos/rating_final.csv'
-places_file = './datos/dataLocal.csv'
-users_file = './datos/dataUser.csv'
+ratings_file = 'https://raw.githubusercontent.com/bsoifer/PredictivoAvanzado/main/datos/rating_final.csv'
+places_file = 'https://raw.githubusercontent.com/bsoifer/PredictivoAvanzado/main/datos/dataLocal.csv'
+users_file = 'https://raw.githubusercontent.com/bsoifer/PredictivoAvanzado/main/datos/dataUser.csv'
 
 df_ratings = pd.read_csv(ratings_file)
 df_places = pd.read_csv(places_file, sep=';')
@@ -115,4 +115,5 @@ def recommend():
     return render_template('recommendations.html', recommendations=recommendations)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port, debug=True)
