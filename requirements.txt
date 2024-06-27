@@ -3,3 +3,4 @@ streamlit
 scikit-surprise
 surprise
 numpy<2
+Flask
