@@ -2,21 +2,31 @@ from flask import Flask, request, jsonify, render_template
 import pandas as pd
 from surprise import Dataset, Reader, KNNBasic
 from surprise.model_selection import train_test_split
+import os
 import uuid
 
 app = Flask(__name__)
 
-df_ratings = pd.read_csv('datos/rating_final.csv', sep=',')
-df_places = pd.read_csv('datos/dataLocal.csv', sep=';')
-df_users = pd.read_csv('datos/dataUser.csv', sep=';')
+# Obtener la ruta del directorio actual del script
+current_dir = os.path.dirname(__file__)
 
+# Rutas a los archivos CSV
+ratings_file = os.path.join(current_dir, 'datos', 'rating_final.csv')
+places_file = os.path.join(current_dir, 'datos', 'dataLocal.csv')
+users_file = os.path.join(current_dir, 'datos', 'dataUser.csv')
+
+# Cargar los DataFrames desde los archivos CSV
+df_ratings = pd.read_csv(ratings_file, sep=',')
+df_places = pd.read_csv(places_file, sep=';')
+df_users = pd.read_csv(users_file, sep=';')
+
+# Configurar Surprise
 reader = Reader(rating_scale=(0, 2))
 data = Dataset.load_from_df(df_ratings[['userID', 'placeID', 'rating']], reader)
 
 trainset, testset = train_test_split(data, test_size=0.2, random_state=42)
 
 algo = KNNBasic(k=20, sim_options={'name': 'msd', 'user_based': False})
-
 algo.fit(trainset)
 
 def recommend_places(user_id, algo, df_places, top_n=10):
@@ -44,7 +54,7 @@ def recommend_places(user_id, algo, df_places, top_n=10):
     return top_recommendations_details
 
 @app.route('/recommend', methods=['POST'])
-def recommend():
+def recommend_endpoint():
     user_data = request.json
 
     user_id = f"U20{uuid.uuid4().hex[:2].upper()}"
@@ -52,7 +62,7 @@ def recommend():
     global df_users  
     new_user = pd.DataFrame([{'userID': user_id, 'latitude': None, 'longitude': None, **user_data}])
     df_users = pd.concat([df_users, new_user], ignore_index=True)
-    df_users.to_csv('datos/dataUser.csv', index=False)
+    df_users.to_csv(users_file, index=False)
 
     recommendations = recommend_places(user_id, algo, df_places)
 
