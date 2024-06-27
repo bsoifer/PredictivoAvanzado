@@ -37,7 +37,7 @@ categorical_features = ['smoker', 'drink_level', 'dress_preference', 'ambience',
 
 imputer = SimpleImputer(strategy='mean')
 scaler = StandardScaler()
-onehot = OneHotEncoder(handle_unknown='ignore', sparse=False)
+onehot = OneHotEncoder(handle_unknown='ignore')
 
 preprocessor = ColumnTransformer(
     transformers=[
