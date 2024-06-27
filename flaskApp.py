@@ -12,6 +12,7 @@ df_ratings = None
 df_places = None
 df_users = None
 algo = None
+reader = Reader(rating_scale=(0, 2))  # Define reader globalmente
 
 # Cargar los datos inicialmente
 def load_data():
@@ -29,11 +30,7 @@ def load_data():
     df_places = pd.read_csv(places_file, sep=';')
     df_users = pd.read_csv(users_file, sep=';')
 
-    # Configurar Surprise
-    reader = Reader(rating_scale=(0, 2))
-    data = Dataset.load_from_df(df_ratings[['userID', 'placeID', 'rating']], reader)
-
-    return data
+    return Dataset.load_from_df(df_ratings[['userID', 'placeID', 'rating']], reader)
 
 # Iniciar el modelo con los datos cargados
 def init_model(data):
