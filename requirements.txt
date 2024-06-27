@@ -4,4 +4,4 @@ scikit-surprise
 surprise
 numpy<2
 Flask
-sklearn
+scikit-learn
